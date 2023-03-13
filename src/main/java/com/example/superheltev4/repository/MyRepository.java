@@ -27,7 +27,7 @@ public class MyRepository implements com.example.superheltev4.repository.Reposit
     public List<Superhero> getSuperheroes() {
         List<Superhero> superheroes = new ArrayList<>();
         try (Connection con = DriverManager.getConnection(db_url, uid, pwd)) {
-            String SQL = "SELECT HERO_ID, HERO_NAME, REAL_NAME, CREATION_YEAR, POWER_ID, CITY_ID FROM SUPERHERO;";
+            String SQL = "SELECT HERO_ID, HERO_NAME, REAL_NAME, CREATION_YEAR, CITY_ID FROM SUPERHERO;";
             Statement sm = con.createStatement();
             ResultSet rs = sm.executeQuery(SQL);
             while (rs.next()) {
@@ -35,10 +35,9 @@ public class MyRepository implements com.example.superheltev4.repository.Reposit
                 String heroName = rs.getString("HERO_NAME");
                 String realName = rs.getString("REAL_NAME");
                 int creationYear = rs.getInt("CREATION_YEAR");
-                int superpowerID = rs.getInt("POWER_ID");
                 int cityID = rs.getInt("CITY_ID");
 
-                superheroes.add(new Superhero(ID, heroName, realName, creationYear, superpowerID, cityID));
+                superheroes.add(new Superhero(ID, heroName, realName, creationYear, cityID));
             }
             return superheroes;
         } catch (SQLException e) {
