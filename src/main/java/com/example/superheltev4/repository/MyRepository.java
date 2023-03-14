@@ -48,14 +48,14 @@ public class MyRepository implements com.example.superheltev4.repository.Reposit
     public HeroPowerDTO heroPower(String name) {
         HeroPowerDTO heroPowerDTO = null;
         try (Connection con = DriverManager.getConnection(db_url, uid, pwd)) {
-            String SQL = "SELECT s.HERO_NAME,s.REAL_NAME,sp.SUPERPOWER FROM SUPERHERO s JOIN SUPERPOWER sp ON s.HERO_ID = sp.POWER_ID  WHERE HERO_NAME = ?";
+            String SQL = "SELECT s.HERO_NAME,s.REAL_NAME,sp.NAME FROM SUPERHERO s JOIN SUPERPOWER sp ON s.HERO_ID = sp.POWER_ID  WHERE HERO_NAME = ?";
             PreparedStatement ps = con.prepareStatement(SQL);
             ps.setString(1, name);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 String heroName = rs.getString("HERO_NAME");
                 String realName = rs.getString("REAL_NAME");
-                String superpower = rs.getString("SUPERPOWER");
+                String superpower = rs.getString("NAME");
                 heroPowerDTO = new HeroPowerDTO(heroName, realName, superpower);
             }
             return heroPowerDTO;
@@ -66,13 +66,13 @@ public class MyRepository implements com.example.superheltev4.repository.Reposit
     public CityDTO heroCity(String name){
         CityDTO cityDTO = null;
         try (Connection con = DriverManager.getConnection(db_url, uid, pwd)) {
-            String SQL = "SELECT CITY_NAME,HERO_NAME FROM SUPERHERO JOIN CITY ON SUPERHERO.CITY_ID = CITY.CITY_ID WHERE CITY_NAME = ? LIMIT 0, 1000;\n";
+            String SQL = "SELECT NAME, HERO_NAME FROM SUPERHERO INNER JOIN CITY USING(CITY_ID) WHERE NAME = ? ORDER BY NAME;";
             PreparedStatement ps = con.prepareStatement(SQL);
             ps.setString(1, name);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 String heroName = rs.getString("HERO_NAME");
-                String cityName = rs.getString("CITY_NAME");
+                String cityName = rs.getString("NAME");
                 cityDTO = new CityDTO(cityName,heroName);
             }
             return cityDTO;
